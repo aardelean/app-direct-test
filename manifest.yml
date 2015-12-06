@@ -1,0 +1,7 @@
+---
+applications:
+- name: app-direct-subscription
+  memory: 2G
+  buildpack: java_buildpack
+  path: build/app-direct-1.0.jar
+  host: contact-api
