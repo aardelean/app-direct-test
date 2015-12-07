@@ -17,6 +17,7 @@ pom.xml.versionsBackup
 /*.sh
 build/
 schema/
+node_modules/
 .gradle
 infinitest.filters
 

@@ -1,0 +1,4 @@
+--insert into company (`id`, `country`, `email`, `name`, `phoneNumber`, `uuid`, `website`)values (1, 'country', 'email', 'name', 'phoneNumber', 'uuid', 'website')
+--insert into subscriptionOrder (`id`, `editionCode`, `pricingDuration`)values (1, 'editionCode', 'pricing')
+--insert into users (`id`, `email`, `firstName`, `language`, `lastName`, `openId`, `uuid`)values (1, 'email', 'firstName','language', 'lastName', 'openId', 'uuid')
+--insert into subscription (`company_id`, `subscriptionOrder_id`, `user_id`, `id`)values (1, 1, 1, 1)

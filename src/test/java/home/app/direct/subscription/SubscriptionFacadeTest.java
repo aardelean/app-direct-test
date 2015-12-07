@@ -13,7 +13,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
 
-public class SubscriptionEndpointTest {
+public class SubscriptionFacadeTest {
     @Mock
     private SubscriptionRepository repository;
 
