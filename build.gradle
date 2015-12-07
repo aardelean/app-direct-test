@@ -36,10 +36,6 @@ dependencies {
     }
     compile 'org.springframework.boot:spring-boot-starter:'+springBoot
     compile 'org.springframework.boot:spring-boot-starter-web:'+springBoot
-
-    compile ('org.springframework.boot:spring-boot-starter-thymeleaf:'+springBoot){
-        exclude module: 'spring-boot-starter-tomcat'
-    }
     compile ('org.springframework.boot:spring-boot-starter-data-rest:'+springBoot){
         exclude module: 'spring-boot-starter-tomcat'
     }
