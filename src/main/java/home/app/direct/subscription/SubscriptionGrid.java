@@ -17,6 +17,7 @@ public class SubscriptionGrid extends CompleteGrid<Subscription> {
     private ContainerDelegate containerDelegate;
 
     public SubscriptionGrid(){
+        setDescription("Subscriptions Orders detected");
         setAddAllowed(false);
         setDeleteAllowed(false);
         setFilterFields(ImmutableSet.of("user.email", "user.firstName", "user.lastName", "company.name"));
@@ -42,8 +43,8 @@ public class SubscriptionGrid extends CompleteGrid<Subscription> {
                 .addFieldDefinition("Company Name", "company.name")
                 .addFieldDefinition("Company UUID", "company.uuid")
                 .addFieldDefinition("Company Website", "company.website")
-                .addFieldDefinition("Order Pricing", "order.pricingDuration")
-                .addFieldDefinition("Company Edition", "company.edition");
+                .addFieldDefinition("Order Pricing", "subscriptionOrder.pricingDuration")
+                .addFieldDefinition("Order Edition", "subscriptionOrder.editionCode");
     }
 
     @Override

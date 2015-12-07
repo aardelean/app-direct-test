@@ -36,6 +36,7 @@ dependencies {
     }
     compile 'org.springframework.boot:spring-boot-starter:'+springBoot
     compile 'org.springframework.boot:spring-boot-starter-web:'+springBoot
+
     compile ('org.springframework.boot:spring-boot-starter-thymeleaf:'+springBoot){
         exclude module: 'spring-boot-starter-tomcat'
     }
@@ -46,6 +47,10 @@ dependencies {
         exclude group: 'org.hibernate'
     }
     compile 'com.vaadin:vaadin-spring:1.0.0'
+    compile 'com.vaadin:vaadin-spring-boot:1.0.0'
+    compile ('com.vaadin:vaadin-spring-boot-starter:1.0.0'){
+        exclude module: 'spring-boot-starter-tomcat'
+    }
     compile 'com.vaadin:vaadin-client:'+vaadin
     compile 'com.vaadin:vaadin-themes:'+vaadin
     compile 'net.sourceforge.javacsv:javacsv:2.0'
