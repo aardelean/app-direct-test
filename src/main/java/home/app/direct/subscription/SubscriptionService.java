@@ -10,36 +10,43 @@ import home.app.direct.transport.EventType;
 import home.app.direct.transport.OrderType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
+import java.util.List;
+import java.util.UUID;
 
 
 @Component
-public class SubscriptionFacade {
+public class SubscriptionService {
 
     @Autowired
     private SubscriptionRepository repository;
 
-    @RequestMapping(method = RequestMethod.POST)
-    public Subscription create(EventType eventType){
+    public Subscription create(InputStream inputStream) throws JAXBException {
+        EventType eventType = transform(inputStream);
         Subscription subscription = new Subscription();
+        subscription.setIdentifier(UUID.randomUUID().toString());
         subscription.setUser(buildCreator(eventType));
         subscription.setCompany(buildCompany(eventType));
         subscription.setSubscriptionOrder(buildOrder(eventType));
         repository.save(subscription);
         return subscription;
+
     }
 
-    public Subscription create(InputStream representation) throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(EventType.class);
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        EventType eventType = (EventType)unmarshaller.unmarshal(representation);
-        return create(eventType);
+    public Subscription change(InputStream inputStream) throws JAXBException {
+        EventType eventType = transform(inputStream);
+        String subscriptionIdentifier = eventType.getPayload().getAccount().getAccountIdentifier();
+        List<Subscription> subscriptions = repository.findByIdentifier(subscriptionIdentifier);
+        assert subscriptions.size() == 1;
+        Subscription subscription = subscriptions.iterator().next();
+        subscription.getSubscriptionOrder().setEditionCode(eventType.getPayload().getOrder().getEditionCode());
+        subscription.getSubscriptionOrder().setPricingDuration(eventType.getPayload().getOrder().getPricingDuration());
+        subscription = repository.save(subscription);
+        return subscription;
     }
 
     private SubscriptionOrder buildOrder(EventType eventType) {
@@ -72,5 +79,11 @@ public class SubscriptionFacade {
         creator.setOpenId(transport.getOpenId());
         creator.setUuid(transport.getUuid());
         return creator;
+    }
+
+    public static EventType transform(InputStream representation) throws JAXBException {
+        JAXBContext jaxbContext = JAXBContext.newInstance(EventType.class);
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        return (EventType)unmarshaller.unmarshal(representation);
     }
 }

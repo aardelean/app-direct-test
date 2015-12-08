@@ -19,4 +19,6 @@ public class Subscription {
 
     @ManyToOne(cascade = CascadeType.ALL)
     private SubscriptionOrder subscriptionOrder;
+
+    private String identifier;
 }

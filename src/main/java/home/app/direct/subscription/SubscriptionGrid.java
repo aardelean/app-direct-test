@@ -19,8 +19,8 @@ public class SubscriptionGrid extends CompleteGrid<Subscription> {
     public SubscriptionGrid(){
         setDescription("Subscriptions Orders detected");
         setAddAllowed(false);
+        setFilterFields(ImmutableSet.of("identifier"));
         setDeleteAllowed(false);
-        setFilterFields(ImmutableSet.of("user.email", "user.firstName", "user.lastName", "company.name"));
         setHasPagination(true);
         setPageSize(10);
     }
@@ -32,6 +32,7 @@ public class SubscriptionGrid extends CompleteGrid<Subscription> {
     @Override
     protected FieldDefinitionContainer getFormFields() {
         return new FieldDefinitionContainer()
+                .addFieldDefinition("Identifier", "identifier")
                 .addFieldDefinition("Creator Email", "user.email")
                 .addFieldDefinition("Creator FirstName", "user.firstName")
                 .addFieldDefinition("Creator LastName", "user.lastName")

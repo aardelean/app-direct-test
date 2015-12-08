@@ -15,17 +15,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for itemType complex type.
+ * <p>Java class for accountType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="itemType">
+ * &lt;complexType name="accountType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="quantity" type="{http://www.w3.org/2001/XMLSchema}byte"/>
- *         &lt;element name="unit" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="accountIdentifier" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -35,54 +34,36 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "itemType", propOrder = {
-    "quantity",
-    "unit"
+@XmlType(name = "accountType", propOrder = {
+    "accountIdentifier"
 })
-public class ItemType {
+public class AccountType {
 
-    protected byte quantity;
     @XmlElement(required = true)
-    protected String unit;
+    protected String accountIdentifier;
 
     /**
-     * Gets the value of the quantity property.
-     * 
-     */
-    public byte getQuantity() {
-        return quantity;
-    }
-
-    /**
-     * Sets the value of the quantity property.
-     * 
-     */
-    public void setQuantity(byte value) {
-        this.quantity = value;
-    }
-
-    /**
-     * Gets the value of the unit property.
+     * Gets the value of the accountIdentifier property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getUnit() {
-        return unit;
+    public String getAccountIdentifier() {
+        return accountIdentifier;
     }
 
     /**
-     * Sets the value of the unit property.
+     * Sets the value of the accountIdentifier property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setUnit(String value) {
-        this.unit = value;
+    public void setAccountIdentifier(String value) {
+        this.accountIdentifier = value;
     }
 
 }

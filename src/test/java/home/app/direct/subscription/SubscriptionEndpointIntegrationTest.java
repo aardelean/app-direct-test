@@ -34,7 +34,7 @@ public class SubscriptionEndpointIntegrationTest {
         Assert.assertTrue( "could not create subscription in integration test, check internet connection! ", result.isSuccess());
         long afterSaveCount = repository.count();
         Assert.assertEquals(originalCount + 1 , afterSaveCount);
-        Subscription inserted = repository.findOne(Long.valueOf(result.getAccountIdentifier()));
+        Subscription inserted = repository.findByIdentifier(result.getAccountIdentifier()).get(0);
         Assert.assertEquals("DummyCreatorFirst", inserted.getUser().getFirstName());
     }
 }
