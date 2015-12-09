@@ -5,7 +5,8 @@
                <xs:sequence>
                      <xs:element name="success" type="xs:boolean"></xs:element>
                      <xs:element name="message" type="xs:string"></xs:element>
-                     <xs:element name="accountIdentifier" type="xs:string"></xs:element>
+                     <xs:element name="errorCode" type="xs:string" nillable="true"></xs:element>
+                     <xs:element name="accountIdentifier" type="xs:string" nillable="true"></xs:element>
                </xs:sequence>
          </xs:complexType>
    </xs:element>

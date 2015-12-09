@@ -1,7 +1,7 @@
 package home.app.direct.subscription;
 
 import home.app.direct.Starter;
-import home.app.direct.subscription.dto.Subscription;
+import home.app.direct.common.dto.Subscription;
 import home.app.direct.transport.Result;
 import org.junit.Assert;
 import org.junit.Test;

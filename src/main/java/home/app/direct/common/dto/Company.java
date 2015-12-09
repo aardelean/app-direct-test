@@ -1,4 +1,4 @@
-package home.app.direct.subscription.dto;
+package home.app.direct.common.dto;
 
 import lombok.Data;
 

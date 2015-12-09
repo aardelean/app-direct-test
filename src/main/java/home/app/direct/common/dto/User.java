@@ -1,15 +1,15 @@
-package home.app.direct.subscription.dto;
+package home.app.direct.common.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
 @Table(name = "users")
+@EqualsAndHashCode(exclude={"id", "subscriptionOrders"})
 public class User {
     @Id
     @GeneratedValue
@@ -20,4 +20,10 @@ public class User {
     protected String lastName;
     protected String openId;
     protected String uuid;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<SubscriptionOrder> subscriptionOrders;
+
+
+
 }

@@ -1,51 +1,101 @@
 package home.app.direct.subscription;
 
-import home.app.direct.subscription.dto.Company;
-import home.app.direct.subscription.dto.Subscription;
-import home.app.direct.subscription.dto.SubscriptionOrder;
-import home.app.direct.subscription.dto.User;
-import home.app.direct.transport.CompanyType;
-import home.app.direct.transport.CreatorType;
-import home.app.direct.transport.EventType;
-import home.app.direct.transport.OrderType;
+import home.app.direct.common.Validator;
+import home.app.direct.users.UserService;
+import home.app.direct.common.dto.*;
+import home.app.direct.transport.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import java.io.InputStream;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 
 @Component
 public class SubscriptionService {
+    private static Logger logger = LoggerFactory.getLogger(SubscriptionService.class);
 
     @Autowired
     private SubscriptionRepository repository;
 
-    public Subscription create(InputStream inputStream) throws JAXBException {
-        EventType eventType = transform(inputStream);
-        Subscription subscription = new Subscription();
-        subscription.setIdentifier(UUID.randomUUID().toString());
-        subscription.setUser(buildCreator(eventType));
-        subscription.setCompany(buildCompany(eventType));
-        subscription.setSubscriptionOrder(buildOrder(eventType));
-        repository.save(subscription);
-        return subscription;
+    @Autowired
+    private UserService customerService;
 
+    @Autowired
+    private Validator validator;
+
+    public ProcessResult create(Optional<EventType> eventTypeOptional) throws JAXBException {
+        Optional<ProcessResult> resultOptional = Optional.empty();
+        try {
+            resultOptional = validator.checkEventType(eventTypeOptional);
+            if (resultOptional.isPresent()) return resultOptional.get();
+
+            EventType eventType = eventTypeOptional.get();
+            Subscription subscription = buildSubscription(eventType);
+            repository.save(subscription);
+            resultOptional = Optional.of(new ProcessResult(subscription.getIdentifier()));
+        }catch (Exception e){
+            logger.error("error while saving order: ", e);
+        }finally {
+            return resultOptional.orElse(new ProcessResult(EventErrorStatus.UNKNOWN_ERROR));
+        }
     }
 
-    public Subscription change(InputStream inputStream) throws JAXBException {
-        EventType eventType = transform(inputStream);
-        String subscriptionIdentifier = eventType.getPayload().getAccount().getAccountIdentifier();
-        List<Subscription> subscriptions = repository.findByIdentifier(subscriptionIdentifier);
-        assert subscriptions.size() == 1;
-        Subscription subscription = subscriptions.iterator().next();
-        subscription.getSubscriptionOrder().setEditionCode(eventType.getPayload().getOrder().getEditionCode());
-        subscription.getSubscriptionOrder().setPricingDuration(eventType.getPayload().getOrder().getPricingDuration());
-        subscription = repository.save(subscription);
+    public ProcessResult change(Optional<EventType> eventTypeOptional) throws JAXBException {
+        Optional<ProcessResult> resultOptional = Optional.empty();
+        try {
+            resultOptional = validator.checkEventType(eventTypeOptional);
+            if (resultOptional.isPresent()) return resultOptional.get();
+
+            Optional<Subscription> subscriptionOptional = getSubscription(eventTypeOptional);
+            resultOptional = validator.checkSubscription(subscriptionOptional);
+            if(resultOptional.isPresent()) return resultOptional.get();
+
+            Subscription subscription = subscriptionOptional.get();
+            OrderType order = eventTypeOptional.get().getPayload().getOrder();
+            subscription.getSubscriptionOrder().setEditionCode(order.getEditionCode());
+            subscription.getSubscriptionOrder().setPricingDuration(order.getPricingDuration());
+            repository.save(subscription);
+            resultOptional = Optional.of(new ProcessResult(subscription.getIdentifier()));
+        }catch (Exception e){
+            logger.error("error while changing order: ", e);
+        }finally {
+            return resultOptional.orElse(new ProcessResult(EventErrorStatus.UNKNOWN_ERROR));
+        }
+    }
+
+    public ProcessResult cancel(Optional<EventType> eventTypeOptional) throws JAXBException {
+        Optional<ProcessResult> resultOptional = Optional.empty();
+        try {
+            resultOptional = validator.checkEventType(eventTypeOptional);
+            if (resultOptional.isPresent()) return resultOptional.get();
+
+            Optional<Subscription> subscriptionOptional = getSubscription(eventTypeOptional);
+            resultOptional = validator.checkSubscription(subscriptionOptional);
+            if(resultOptional.isPresent()) return resultOptional.get();
+
+            Subscription subscription = subscriptionOptional.get();
+            subscription.setSubscriptionStatus(SubscriptionStatus.CANCELLED);
+            repository.save(subscription);
+            resultOptional = Optional.of(new ProcessResult(subscription.getIdentifier()));
+        }catch (Exception e){
+            logger.error("error while canceling order: ", e);
+        }finally {
+            return resultOptional.orElse(new ProcessResult(EventErrorStatus.UNKNOWN_ERROR));
+        }
+    }
+
+    private Subscription buildSubscription(EventType eventType) {
+        Subscription subscription = new Subscription();
+//        subscription.setIdentifier(UUID.randomUUID().toString());
+        subscription.setIdentifier("dummy-account");
+        subscription.setUser(customerService.convertUser(eventType.getCreator()));
+        subscription.setCompany(buildCompany(eventType));
+        subscription.setSubscriptionOrder(buildOrder(eventType));
+        subscription.setSubscriptionStatus(SubscriptionStatus.VALID);
         return subscription;
     }
 
@@ -69,21 +119,12 @@ public class SubscriptionService {
         return company;
     }
 
-    private User buildCreator(EventType eventType) {
-        User creator = new User();
-        CreatorType transport = eventType.getCreator();
-        creator.setEmail(transport.getEmail());
-        creator.setFirstName(transport.getFirstName());
-        creator.setLanguage(transport.getLanguage());
-        creator.setLastName(transport.getLastName());
-        creator.setOpenId(transport.getOpenId());
-        creator.setUuid(transport.getUuid());
-        return creator;
-    }
-
-    public static EventType transform(InputStream representation) throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(EventType.class);
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        return (EventType)unmarshaller.unmarshal(representation);
+    public Optional<Subscription> getSubscription(Optional<EventType>eventType){
+        String subscriptionIdentifier = eventType.get().getPayload().getAccount().getAccountIdentifier();
+        List<Subscription> subscriptions = repository.findByIdentifier(subscriptionIdentifier);
+        if (subscriptions.size() == 1){
+            return Optional.of(subscriptions.get(0));
+        }
+        return Optional.empty();
     }
 }

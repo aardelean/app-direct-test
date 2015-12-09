@@ -1,4 +1,4 @@
-package home.app.direct.subscription.dto;
+package home.app.direct.common.dto;
 
 import lombok.Data;
 
@@ -21,4 +21,8 @@ public class Subscription {
     private SubscriptionOrder subscriptionOrder;
 
     private String identifier;
+
+    @Enumerated(EnumType.STRING)
+    private SubscriptionStatus subscriptionStatus;
+
 }

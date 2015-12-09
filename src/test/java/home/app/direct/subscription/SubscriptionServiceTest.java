@@ -1,7 +1,10 @@
 package home.app.direct.subscription;
 
-import home.app.direct.subscription.dto.Subscription;
-import home.app.direct.subscription.dto.SubscriptionOrder;
+import home.app.direct.common.Validator;
+import home.app.direct.common.dto.Subscription;
+import home.app.direct.common.dto.SubscriptionOrder;
+import home.app.direct.common.dto.User;
+import home.app.direct.users.UserService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,27 +15,41 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class SubscriptionServiceTest {
     @Mock
     private SubscriptionRepository repository;
 
+    @Mock
+    private Validator validator;
+
+    @Mock
+    private UserService userService;
+
     @InjectMocks
-    private SubscriptionService endpoint;
+    private SubscriptionService classUnderTest;
 
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
+        Mockito.when(validator.checkAlreadyAssigned(Mockito.any(User.class), Mockito.anyList())).thenReturn(Optional.empty());
+        Mockito.when(validator.checkEventType(Mockito.any())).thenReturn(Optional.empty());
+        Mockito.when(validator.checkSubscription(Mockito.any())).thenReturn(Optional.empty());
+        Mockito.when(userService.convertUser(Mockito.any())).thenReturn(new User());
     }
 
     @Test
     public void persistSubscription() throws JAXBException, IOException {
         ArgumentCaptor<Subscription> arg = ArgumentCaptor.forClass(Subscription.class);
 
-        endpoint.create(new ClassPathResource("dummyOrder.xml").getInputStream());
+        classUnderTest.create(Optional.of(
+                SubscriptionServiceIntegrationTest.transform(
+                        new ClassPathResource("dummyOrder.xml").getInputStream()
+                )));
         Mockito.verify(repository).save(arg.capture());
         Subscription subscription = arg.getValue();
-        Assert.assertEquals("DummyCreatorFirst", subscription.getUser().getFirstName());
+        Assert.assertEquals("BASIC", subscription.getSubscriptionOrder().getEditionCode());
     }
 
     @Test
@@ -44,12 +61,31 @@ public class SubscriptionServiceTest {
         subscriptions.add(subscription);
         Mockito.when(repository.findByIdentifier(Mockito.anyString())).thenReturn(subscriptions);
 
-        endpoint.change(new ClassPathResource("dummyChange.xml").getInputStream());
+        classUnderTest.change(Optional.of(
+                SubscriptionServiceIntegrationTest.transform(
+                        new ClassPathResource("dummyChange.xml").getInputStream()
+                )));
 
         Mockito.verify(repository).save(arg.capture());
         subscription = arg.getValue();
         Assert.assertEquals("PREMIUM", subscription.getSubscriptionOrder().getEditionCode());
     }
 
+    @Test
+    public void cancelSubscription() throws JAXBException, IOException {
+        ArgumentCaptor<Subscription> arg = ArgumentCaptor.forClass(Subscription.class);
+        List<Subscription> subscriptions = new ArrayList<>();
+        Subscription subscription = new Subscription();
+        subscriptions.add(subscription);
+        Mockito.when(repository.findByIdentifier(Mockito.anyString())).thenReturn(subscriptions);
 
+        classUnderTest.cancel(Optional.of(
+                SubscriptionServiceIntegrationTest.transform(
+                        new ClassPathResource("dummyCancel.xml").getInputStream()
+                )));
+
+        Mockito.verify(repository).save(arg.capture());
+        subscription = arg.getValue();
+        Assert.assertEquals("CANCELLED", subscription.getSubscriptionStatus().name());
+    }
 }
