@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Spring Security Example</title>
+</head>
+<body>
+<form id="openidLoginOptionForm" action="/login-open-id" method="post" target="_top">
+    <input id="openid_identifier" name="openid_identifier" maxlength="100" type="text"
+           value="https://www.appdirect.com/openid/id/713dfa31-498e-45fb-86a4-4ad1bb0ab0c3" />
+    <input type="submit" />
+</form>
+
+</body>
+</html>
