@@ -49,7 +49,9 @@ dependencies {
     }
     compile 'com.vaadin:vaadin-client:'+vaadin
     compile 'com.vaadin:vaadin-themes:'+vaadin
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf:'+springBoot
     compile 'net.sourceforge.javacsv:javacsv:2.0'
+    compile 'org.springframework.boot:spring-boot-starter-security:'+springBoot
     compile 'joda-time:joda-time:2.9'
     compile 'oauth.signpost:signpost-core:1.2.1.2'
     compile 'oauth.signpost:signpost-commonshttp4:1.2.1.2'

@@ -10,4 +10,5 @@ public class Starter  extends SpringBootServletInitializer implements WebApplica
     public static void main(String...args){
         SpringApplication.run(Starter.class);
     }
+
 }
