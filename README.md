@@ -5,6 +5,7 @@ Tehnologies used:
   - presentation layer: vaadin, html
   - cloud provider: cloud foundry, pivotal
   - database: h2 in memory
+  - security: spring security, openid4java
   - code technologies: spring boot, spring rest, jpa, hibernate, lombok, jaxb.
 
 Usage:
@@ -19,12 +20,18 @@ To deploy on cloud foundry: cf push (requires cloud foundry client and account)
 
 Already deployed at http://app-direct-subscription.cfapps.io
 
+OpenId integration with app direct:
+ - add http://app-direct-subscription.cfapps.io/login-open-id?openid_identifier={openid}
+ for checking the default view
+ - since it is a h2 based application, if the user is not found, it will create a default user for allowing
+ view operation on /check
+
 At the url http://app-direct-subscription.cfapps.io/check is the vaadin presentation of all subscriptions or users ordered
 since last deploy.
 
 At http://app-direct-subscription.cfapps.io/api/subscriptions can be verified via rest the same orders.
 At http://app-direct-subscription.cfapps.io/api/customers can be verified via rest the same customers.
-
+Hal browser enabled at http://app-direct-subscription.cfapps.io/api/
 
 Operations supported so far: 
   - subscription order at url http://app-direct-subscription.cfapps.io/subscription/create?eventurl={eventUrl}
