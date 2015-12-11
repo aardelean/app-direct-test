@@ -52,6 +52,7 @@ dependencies {
     }
     compile 'com.vaadin:vaadin-client:'+vaadin
     compile 'com.vaadin:vaadin-themes:'+vaadin
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf:'+springBoot
     compile 'org.springframework.boot:spring-boot-starter-security:'+springBoot
     compile 'org.openid4java:openid4java:0.9.6'
     compile 'org.springframework.security:spring-security-openid:4.0.3.RELEASE'
