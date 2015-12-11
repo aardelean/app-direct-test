@@ -10,7 +10,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import home.app.direct.subscription.view.SubscriptionGrid;
 import home.app.direct.users.view.UsersGrid;
-import home.app.direct.vaadin.components.view.CompleteGrid;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringComponent
@@ -30,6 +29,9 @@ public class CheckItemsView extends UI{
         panel.setWidth(975, Unit.PIXELS);
         MenuBar mainMenu = new MenuBar();
         addMenuItem("subscriptions", mainMenu, panel, subscriptionGrid);
+        mainMenu.addItem("subscriptions", p-> {
+            panel.setContent(subscriptionGrid.start());
+        });
         addMenuItem("users", mainMenu, panel, usersGrid);
         verticalLayout.addComponent(mainMenu);
         verticalLayout.addComponent(panel);
@@ -37,9 +39,7 @@ public class CheckItemsView extends UI{
     }
 
     private void addMenuItem(String label, MenuBar mainMenu,
-                             final Panel parent,final CompleteGrid grid){
-        mainMenu.addItem(label, p-> {
-            parent.setContent(grid.start(false, "me"));
-        });
+                             final Panel parent,final SimpleGrid grid){
+
     }
 }

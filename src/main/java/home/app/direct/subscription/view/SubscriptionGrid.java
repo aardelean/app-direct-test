@@ -3,55 +3,61 @@ package home.app.direct.subscription.view;
 import com.google.common.collect.ImmutableSet;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
+import home.app.direct.common.SimpleGrid;
 import home.app.direct.common.dto.Subscription;
-import home.app.direct.vaadin.components.container.ContainerDelegate;
-import home.app.direct.vaadin.components.view.CompleteGrid;
-import home.app.direct.vaadin.components.view.grid.fields.FieldDefinitionContainer;
+import home.app.direct.subscription.SubscriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
+
+import java.util.Set;
 
 @SpringComponent
 @UIScope
-public class SubscriptionGrid extends CompleteGrid<Subscription> {
+public class SubscriptionGrid extends SimpleGrid<Subscription> {
 
     @Autowired
-    private ContainerDelegate containerDelegate;
+    private SubscriptionRepository subscriptionRepository;
 
-    public SubscriptionGrid(){
-        setDescription("Subscriptions Orders detected");
-        setAddAllowed(false);
-        setInlineEditAllowed(false);
-        setFilterFields(ImmutableSet.of("identifier"));
-        setDeleteAllowed(false);
-        setHasPagination(true);
-        setPageSize(10);
-    }
-    @Override
-    protected Subscription newEntity() {
-        return new Subscription();
+    public SubscriptionGrid(String title, Class clazz) {
+        super(title, clazz);
     }
 
     @Override
-    protected FieldDefinitionContainer getFormFields() {
-        return new FieldDefinitionContainer()
-                .addFieldDefinition("Identifier", "identifier")
-                .addFieldDefinition("Order Pricing", "subscriptionOrder.pricingDuration")
-                .addFieldDefinition("Order Edition", "subscriptionOrder.editionCode")
-                .addFieldDefinition("Order Status", "subscriptionStatus")
-                .addFieldDefinition("Creator Email", "user.email")
-                .addFieldDefinition("Creator FirstName", "user.firstName")
-                .addFieldDefinition("Creator LastName", "user.lastName")
-                .addFieldDefinition("Creator Language", "user.language")
-                .addFieldDefinition("Creator OpenId", "user.openId")
-                .addFieldDefinition("Creator UUID", "user.uuid")
-                .addFieldDefinition("Company Country", "company.country")
-                .addFieldDefinition("Company Email", "company.email")
-                .addFieldDefinition("Company Name", "company.name")
-                .addFieldDefinition("Company UUID", "company.uuid")
-                .addFieldDefinition("Company Website", "company.website");
+    protected CrudRepository<Subscription, ?> getRepository() {
+        return subscriptionRepository;
     }
 
     @Override
-    protected ContainerDelegate getContainerDelegate() {
-        return containerDelegate;
+    protected Set<String> getColumnNames() {
+        return ImmutableSet.of("Identifier",
+                                      "identifier",
+                                      "Order Pricing",
+                                      "subscriptionOrder.pricingDuration",
+                                      "Order Edition",
+                                      "subscriptionOrder.editionCode",
+                                      "Order Status",
+                                      "subscriptionStatus",
+                                      "Creator Email",
+                                      "user.email",
+                                      "Creator FirstName",
+                                      "user.firstName",
+                                      "Creator LastName",
+                                      "user.lastName",
+                                      "Creator Language",
+                                      "user.language",
+                                      "Creator OpenId",
+                                      "user.openId",
+                                      "Creator UUID",
+                                      "user.uuid",
+                                      "Company Country",
+                                      "company.country",
+                                      "Company Email",
+                                      "company.email",
+                                      "Company Name",
+                                      "company.name",
+                                      "Company UUID",
+                                      "company.uuid",
+                                      "Company Website",
+                                      "company.website");
     }
 }
