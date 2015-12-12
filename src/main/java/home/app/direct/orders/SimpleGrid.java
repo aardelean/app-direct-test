@@ -27,7 +27,8 @@ public abstract class SimpleGrid<T> extends Grid {
 
     public SimpleGrid start(){
         List resultList = new ArrayList<>();
-        Collections.addAll(resultList, getRepository().findAll());
+		Iterable<T> iterable = getRepository().findAll();
+		iterable.forEach(resultList::add);
         init(resultList);
         return this;
     }
