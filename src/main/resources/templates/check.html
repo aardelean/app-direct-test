@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Subscriptions and Users</title>
+</head>
+<body>
+<h1>Subscriptions</h1>
+<table>
+    <tr data-th-each="subscription : ${subscriptions}">
+        <td data-th-text="${subscription.identifier}"></td>
+        <table>
+            <tr data-th-each="user : ${subscription.subscriptionOrder.users}">
+                <td data-th-text="${user.firstName}"></td>
+                <td data-th-text="${user.lastName}"></td>
+            </tr>
+        </table>
+    </tr>
+</table>
+
+
+</body>
+</html>

@@ -11,5 +11,6 @@ public class WebApplicationConfiguration extends WebMvcConfigurerAdapter{
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/open-id-form").setViewName("open-id-form");
+        registry.addViewController("/check").setViewName("check.html");
     }
 }

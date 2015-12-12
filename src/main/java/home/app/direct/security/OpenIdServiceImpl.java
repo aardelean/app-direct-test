@@ -1,6 +1,5 @@
 package home.app.direct.security;
 
-import home.app.direct.orders.UserDetailsImpl;
 import home.app.direct.orders.users.UserRepository;
 import home.app.direct.orders.users.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;

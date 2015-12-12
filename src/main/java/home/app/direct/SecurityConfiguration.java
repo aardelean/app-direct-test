@@ -17,7 +17,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 //allow some rest operations
-            .authorizeRequests().antMatchers("/subscription", "/customer", "/api/subscriptions")
+            .authorizeRequests().antMatchers(
+                "/subscription",
+                "/subscription/*",
+                "/subscriptions",
+                "/customer",
+                "/customer/*",
+                "/api/subscriptions")
                 //user-friendly graph is not allowed non authenticated
             .permitAll().antMatchers("/check").authenticated()
                 //openid configuration
