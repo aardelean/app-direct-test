@@ -4,6 +4,7 @@ import home.app.direct.Starter;
 import home.app.direct.orders.subscription.entity.Subscription;
 import home.app.direct.transport.Result;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.io.IOException;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Starter.class)
 @WebAppConfiguration
+@Ignore//Ignored since depending on the system and connectivity, this test might not connect to external service.
 public class SubscriptionEndpointIntegrationTest {
     @Autowired
     private SubscriptionEndpoint classUnderTest;
